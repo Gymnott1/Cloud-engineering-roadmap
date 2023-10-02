@@ -1,0 +1,47 @@
+
+body{
+    background-color: #f1f1f1;
+    margin: 10 10 10 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+
+}
+
+h1{
+    font-size: 30px;
+    text-align: center;
+}
+
+h3{
+    font-size: 20px;
+    text-align: center;
+}
+
+ul{
+    list-style-type: numbers;
+}
+
+li{
+    font-size: 15px;
+    text-align: left;
+    background-origin: padding-box;
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+    color: white;
+    
+}
+
+/* CSS for styling <code> elements */
+code {
+    /* Set the font family and style for code elements */
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    background-color: #f2f2f2; /* Background color */
+    padding: 2px 4px; /* Padding for the code block */
+    border: 1px solid #ccc; /* Border for the code block */
+    border-radius: 4px; /* Rounded corners for the code block */
+    color: #333; /* Text color */
+    
+}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <title>Static web</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+   
+    <body>
+        <div>
+            <h1>Steps to cloud</h1>
+            <p>This is the first project</p>
+            <div>
+                <h2>Amazon S3 project: Deploy a static website on AWS using Amazon S3</h2>
+                <h3 id="myList">Create an S3 Bucket</h3>
+                <ul>
+                    <li>ign in to your AWS Management Console</li>
+                    <li>Go to the Amazon S3 service.</li>
+                    <li>Click the "Create bucket" button.</li>
+                    <li>Choose a unique name for your bucket. This name will be part of your website URL, so make it something appropriate.</li>
+                    <li>Leave the rest of the settings as default or adjust them according to your needs.</li>
+                    <li>Click the "Create" button to create the S3 bucket.</li>
+                </ul>
+            </div>
+            <div>
+                <h3 id="myList"> Configure Your S3 Bucket for Website Hosting</h3>
+                <ul>
+                    <li>After creating the bucket, go to the bucket's properties.</li>
+                    <li>Under the "Static website hosting" section, click "Edit."</li>
+                    <li>Select "Use this bucket to host a website."</li>
+                    <li>Enter the index document (e.g., index.html) and optionally, the error document (e.g., error.html).</li>
+                    <li>Click the "Apply" button. and Click "Save changes."</li>
+                </ul>
+            </div>
+            <div>
+                <h3 id="myList"> Upload Your Website Files</h3>
+                <ul>
+                    <li>In the S3 bucket, navigate to the "Objects" tab.</li>
+                    <li>Click the "Upload" button to upload your static website files. You can also use the AWS CLI or other tools to upload files.</li>
+                    <li>Once uploaded, make sure the files are publicly accessible. Select the files, click "Actions," and then choose "Make public."</li>
+                </ul>
+            </div>
+            <div>
+                <h3 id="myList"> Set Bucket Permissions</h3>
+                <ul>
+                    <li>To ensure public access to your website content, you need to configure the bucket's permissions:</li>
+                    <li>In the bucket's properties, go to the "Permissions" tab.</li>
+                    <li>Under "Bucket policy," click "Edit."</li>
+                    <li>Add a bucket policy like the following, replacing "YOUR_BUCKET_NAME" with your bucket name:</li>
+                    <li><code>
+                        {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Sid": "PublicReadGetObject",
+                                    "Effect": "Allow",
+                                    "Principal": "*",
+                                    "Action": "s3:GetObject",
+                                    "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME/*"
+                                }
+                            ]
+                        }
+                        
+                    </code></li>
+                    <li>Click the "Apply/save" button.</li>
+                </ul>
+            </div>
+            <div>
+                <h3 id="myList">Configure DNS (Optional)</h3>
+                <p>If you want to use a custom domain for your website, configure DNS settings to point to your S3 bucket. You can use Amazon Route 53 for this purpose.</p>
+            </div>
+            <div>
+                <h3 id="myList">Verify Your Website</h3>
+                <p>Once your S3 bucket is configured, and your files are uploaded, you can access your website using the S3 endpoint URL or your custom domain if you set up DNS.</p>
+                <p>Your static website is now deployed and hosted on Amazon S3. Make sure to keep your website files updated by uploading new versions to your S3 bucket as needed.</p>
+            </div>
+        </div>
+        <script src="./javascript.js"></script>
+    </body>
+</html>
