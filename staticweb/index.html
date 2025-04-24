@@ -1,79 +1,734 @@
 <!DOCTYPE html>
-<html>
-    <title>Static web</title>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
-   
-    <body>
-        <div>
-            <h1>Steps to cloud</h1>
-            <p>This is the first project</p>
-            <div>
-                <h2>Amazon S3 project: Deploy a static website on AWS using Amazon S3</h2>
-                <h3 id="myList">Create an S3 Bucket</h3>
-                <ul>
-                    <li>ign in to your AWS Management Console</li>
-                    <li>Go to the Amazon S3 service.</li>
-                    <li>Click the "Create bucket" button.</li>
-                    <li>Choose a unique name for your bucket. This name will be part of your website URL, so make it something appropriate.</li>
-                    <li>Leave the rest of the settings as default or adjust them according to your needs.</li>
-                    <li>Click the "Create" button to create the S3 bucket.</li>
-                </ul>
-            </div>
-            <div>
-                <h3 id="myList"> Configure Your S3 Bucket for Website Hosting</h3>
-                <ul>
-                    <li>After creating the bucket, go to the bucket's properties.</li>
-                    <li>Under the "Static website hosting" section, click "Edit."</li>
-                    <li>Select "Use this bucket to host a website."</li>
-                    <li>Enter the index document (e.g., index.html) and optionally, the error document (e.g., error.html).</li>
-                    <li>Click the "Apply" button. and Click "Save changes."</li>
-                </ul>
-            </div>
-            <div>
-                <h3 id="myList"> Upload Your Website Files</h3>
-                <ul>
-                    <li>In the S3 bucket, navigate to the "Objects" tab.</li>
-                    <li>Click the "Upload" button to upload your static website files. You can also use the AWS CLI or other tools to upload files.</li>
-                    <li>Once uploaded, make sure the files are publicly accessible. Select the files, click "Actions," and then choose "Make public."</li>
-                </ul>
-            </div>
-            <div>
-                <h3 id="myList"> Set Bucket Permissions</h3>
-                <ul>
-                    <li>To ensure public access to your website content, you need to configure the bucket's permissions:</li>
-                    <li>In the bucket's properties, go to the "Permissions" tab.</li>
-                    <li>Under "Bucket policy," click "Edit."</li>
-                    <li>Add a bucket policy like the following, replacing "YOUR_BUCKET_NAME" with your bucket name:</li>
-                    <li><code>
-                        {
-                            "Version": "2012-10-17",
-                            "Statement": [
-                                {
-                                    "Sid": "PublicReadGetObject",
-                                    "Effect": "Allow",
-                                    "Principal": "*",
-                                    "Action": "s3:GetObject",
-                                    "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME/*"
-                                }
-                            ]
-                        }
-                        
-                    </code></li>
-                    <li>Click the "Apply/save" button.</li>
-                </ul>
-            </div>
-            <div>
-                <h3 id="myList">Configure DNS (Optional)</h3>
-                <p>If you want to use a custom domain for your website, configure DNS settings to point to your S3 bucket. You can use Amazon Route 53 for this purpose.</p>
-            </div>
-            <div>
-                <h3 id="myList">Verify Your Website</h3>
-                <p>Once your S3 bucket is configured, and your files are uploaded, you can access your website using the S3 endpoint URL or your custom domain if you set up DNS.</p>
-                <p>Your static website is now deployed and hosted on Amazon S3. Make sure to keep your website files updated by uploading new versions to your S3 bucket as needed.</p>
-            </div>
+    <title>Cloud Engineering Career Path</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #60a5fa;
+            --light-color: #f3f4f6;
+            --dark-color: #111827;
+            --text-color: #374151;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-color);
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .cloud-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.1;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: white;
+            color: var(--primary-color);
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        h2:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .card-body ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .card-body li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .card-body li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+        }
+        
+        .roadmap {
+            margin-top: 3rem;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 2rem auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--accent-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -12px;
+            background-color: white;
+            border: 4px solid var(--accent-color);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .left {
+            left: 0;
+        }
+        
+        .right {
+            left: 50%;
+        }
+        
+        .right::after {
+            left: -12px;
+        }
+        
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .faq-container {
+            margin-top: 2rem;
+        }
+        
+        .faq-item {
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            background-color: white;
+            padding: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .faq-question:hover {
+            background-color: #f9fafb;
+        }
+        
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .faq-answer.active {
+            padding: 1rem;
+            max-height: 1000px;
+        }
+        
+        .technologies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .tech-badge {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-link {
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item::after {
+                left: 18px;
+            }
+            
+            .left::after, .right::after {
+                left: 18px;
+            }
+            
+            .right {
+                left: 0%;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="cloud-animation" id="cloudCanvas"></div>
+        <div class="hero-content">
+            <h1>Cloud Engineering</h1>
+            <p class="subtitle">Building the Infrastructure of Tomorrow</p>
+            <a href="#roadmap" class="cta-button">Explore Career Path</a>
         </div>
-        <script src="./javascript.js"></script>
-    </body>
+    </header>
+    
+    <main>
+        <section id="introduction">
+            <h2>What is Cloud Engineering?</h2>
+            <p>Cloud engineering is the application of engineering disciplines to cloud computing. It involves designing, building, operating, and maintaining cloud computing systems and services. Cloud engineers are responsible for technical tasks related to cloud computing, including design, planning, management, maintenance, and support.</p>
+            
+            <p>As businesses increasingly move their operations to the cloud, the demand for skilled cloud engineers continues to grow. Cloud engineers combine software development skills with operations knowledge to create efficient, scalable, and reliable cloud infrastructure.</p>
+        </section>
+        
+        <section id="career-paths">
+            <h2>Cloud Engineering Career Paths</h2>
+            <p>The field of cloud engineering offers diverse career paths, each focusing on different aspects of cloud technology:</p>
+            
+            <div class="cards-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Cloud Architect</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Designs and oversees cloud computing strategy and architecture.</p>
+                        <ul>
+                            <li>Solution design</li>
+                            <li>Migration planning</li>
+                            <li>Security architecture</li>
+                            <li>High-level system design</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>DevOps Engineer</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Implements continuous integration and delivery pipelines.</p>
+                        <ul>
+                            <li>Automation</li>
+                            <li>CI/CD implementation</li>
+                            <li>Infrastructure as Code</li>
+                            <li>Monitoring and logging</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Cloud Security Engineer</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Ensures the security of cloud environments and applications.</p>
+                        <ul>
+                            <li>Security configurations</li>
+                            <li>Compliance monitoring</li>
+                            <li>Threat detection</li>
+                            <li>Identity management</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>SRE (Site Reliability Engineer)</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Focuses on reliability, scalability, and performance of systems.</p>
+                        <ul>
+                            <li>System reliability</li>
+                            <li>Performance optimization</li>
+                            <li>Capacity planning</li>
+                            <li>Incident response</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="key-technologies">
+            <h2>Key Technologies and Skills</h2>
+            <p>Cloud engineers need to be proficient in a variety of technologies:</p>
+            
+            <div class="technologies">
+                <span class="tech-badge">AWS</span>
+                <span class="tech-badge">Azure</span>
+                <span class="tech-badge">Google Cloud</span>
+                <span class="tech-badge">Docker</span>
+                <span class="tech-badge">Kubernetes</span>
+                <span class="tech-badge">Terraform</span>
+                <span class="tech-badge">Ansible</span>
+                <span class="tech-badge">Jenkins</span>
+                <span class="tech-badge">Python</span>
+                <span class="tech-badge">Git</span>
+                <span class="tech-badge">Linux</span>
+                <span class="tech-badge">Networking</span>
+                <span class="tech-badge">Security</span>
+                <span class="tech-badge">Monitoring</span>
+                <span class="tech-badge">CI/CD</span>
+            </div>
+        </section>
+        
+        <section id="roadmap" class="roadmap">
+            <h2>Cloud Engineering Learning Roadmap</h2>
+            <p>A step-by-step guide to becoming a proficient cloud engineer:</p>
+            
+            <div class="timeline">
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <h3>Step 1: Build Foundational Knowledge</h3>
+                        <p>Learn operating systems (Linux), networking fundamentals, and basic programming skills (Python, JavaScript).</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <h3>Step 2: Learn a Cloud Platform</h3>
+                        <p>Master a major cloud platform like AWS, Azure, or Google Cloud. Start with core services and gradually expand knowledge.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <h3>Step 3: Infrastructure as Code</h3>
+                        <p>Learn tools like Terraform, AWS CloudFormation, or Azure Resource Manager to provision and manage infrastructure programmatically.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <h3>Step 4: Containerization & Orchestration</h3>
+                        <p>Master Docker for containerization and Kubernetes for container orchestration.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <h3>Step 5: CI/CD Pipelines</h3>
+                        <p>Implement continuous integration and delivery using tools like Jenkins, GitHub Actions, or GitLab CI.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <h3>Step 6: Monitoring & Logging</h3>
+                        <p>Learn monitoring solutions like Prometheus, Grafana, ELK stack, and cloud-native monitoring tools.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <h3>Step 7: Cloud Security</h3>
+                        <p>Understand cloud security best practices, identity and access management, and compliance frameworks.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <h3>Step 8: Build Projects</h3>
+                        <p>Apply your knowledge by building real-world projects and creating a portfolio to showcase your skills.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="projects">
+            <h2>Hands-on Projects for Learning</h2>
+            <p>The best way to learn cloud engineering is by doing. Here are some projects to help you apply your knowledge:</p>
+            
+            <div class="cards-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Static Website Hosting</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Deploy a static website using Amazon S3, CloudFront, and Route 53.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Serverless Application</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Build a serverless app using AWS Lambda, API Gateway, and DynamoDB.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Containerized Microservices</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Deploy microservices using Docker and Kubernetes on a cloud platform.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>CI/CD Pipeline</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Set up an automated pipeline for testing and deploying applications.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Infrastructure as Code</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Use Terraform to provision and manage your cloud infrastructure.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Monitoring Solution</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Implement a comprehensive monitoring and alerting system.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="faq">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How long does it take to become a cloud engineer?</span>
+                        <span class="toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>The timeline varies based on your background and dedication. With prior IT experience, you might transition into cloud engineering in 6-12 months. Without prior experience, expect 1-2 years of dedicated learning and practice to reach an entry-level position.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Which cloud certification should I get first?</span>
+                        <span class="toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>For beginners, AWS Certified Cloud Practitioner, Microsoft Azure Fundamentals (AZ-900), or Google Cloud Digital Leader are excellent starting points. After gaining foundational knowledge, pursue associate-level certifications in your chosen cloud provider.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Do I need programming skills to be a cloud engineer?</span>
+                        <span class="toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, programming skills are increasingly important for cloud engineers. Python is particularly valuable for automation and scripting. Additionally, understanding infrastructure as code tools like Terraform requires programming concepts. While you don't need to be a software developer, comfort with code is essential.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Which cloud provider should I learn first?</span>
+                        <span class="toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>AWS currently has the largest market share and job opportunities, making it a solid first choice. However, the concepts you learn will transfer between providers. Consider researching which provider is most in-demand in your target job market. Once you master one provider, learning others becomes easier.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How much does a cloud engineer earn?</span>
+                        <span class="toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Cloud engineer salaries vary by location, experience, and specialization. Entry-level positions typically start around $70,000-$90,000 in the US. Mid-level cloud engineers can earn $100,000-$130,000, while senior engineers and architects often earn $130,000-$180,000+. Specialized skills in areas like security or machine learning can command premium salaries.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>© 2025 Cloud Engineering Career Guide</p>
+        <p>Build your future in the cloud!</p>
+        <div class="social-links">
+            <a href="#" class="social-link">LinkedIn</a>
+            <a href="#" class="social-link">GitHub</a>
+            <a href="#" class="social-link">Twitter</a>
+        </div>
+    </footer>
+    
+    <script>
+        // Cloud animation in header
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('cloudCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas to full header size
+            function resizeCanvas() {
+                canvas.width = canvas.parentElement.offsetWidth;
+                canvas.height = canvas.parentElement.offsetHeight;
+            }
+            
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            
+            // Cloud class
+            class Cloud {
+                constructor(x, y, width, height, speed) {
+                    this.x = x;
+                    this.y = y;
+                    this.width = width;
+                    this.height = height;
+                    this.speed = speed;
+                }
+                
+                draw() {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.width/3, 0, Math.PI * 2);
+                    ctx.arc(this.x + this.width/3, this.y - this.height/4, this.width/3, 0, Math.PI * 2);
+                    ctx.arc(this.x + this.width/1.5, this.y, this.width/3, 0, Math.PI * 2);
+                    ctx.arc(this.x + this.width/3, this.y + this.height/4, this.width/3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                update() {
+                    this.x += this.speed;
+                    if (this.x > canvas.width + this.width) {
+                        this.x = -this.width;
+                    }
+                }
+            }
+            
+            // Create clouds
+            const clouds = [];
+            for (let i = 0; i < 10; i++) {
+                const width = Math.random() * 60 + 40;
+                const height = width * 0.6;
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const speed = Math.random() * 0.2 + 0.1;
+                clouds.push(new Cloud(x, y, width, height, speed));
+            }
+            
+            // Animation loop
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                clouds.forEach(cloud => {
+                    cloud.update();
+                    cloud.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        });
+        
+        // FAQ accordion functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const isActive = answer.classList.contains('active');
+                
+                // Close all answers
+                document.querySelectorAll('.faq-answer').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                document.querySelectorAll('.toggle').forEach(toggle => {
+                    toggle.textContent = '+';
+                });
+                
+                // Open clicked answer if it was closed
+                if (!isActive) {
+                    answer.classList.add('active');
+                    question.querySelector('.toggle').textContent = '-';
+                }
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
 </html>

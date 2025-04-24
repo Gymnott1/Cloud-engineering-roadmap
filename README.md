@@ -1,103 +1,111 @@
+# Cloud Engineering and DevOps Roadmap
 
-
-
+Welcome to the Cloud Engineering and DevOps Roadmap! This guide is designed to help you become a proficient junior cloud or DevOps engineer by completing a series of hands-on projects. Each project will equip you with essential skills and knowledge, combining cloud engineering and DevOps practices.
 
 ![Screenshot_20230930-102809](https://github.com/Gymnott1/Cloud-engineering-roadmap/assets/114360713/65743508-f138-4f8d-915a-74e0484b68b8)
 
-
 ![sshot](https://github.com/Gymnott1/Cloud-engineering-roadmap/assets/114360713/61c5a9a5-9369-483a-9cad-2d078e951b9b)
 
+## Project Overview
 
-# Cloud-engineering-roadmap
-This file contains a short road map to be a cloud and DevOps engineer Junior 
+![image](staticweb/cl1.png)
 
-CLOUD ENGINEERING AND DevOps SHORT ROAD MAP
-In our road map we will be combining cloud engineering and DevOps in our projects. After the projects you will be equipped with required skills to be employed as junior cloud or DevOps engineer. We will need these three steps to know what concepts fits where:
+### Project #1: Amazon S3 Static Website Deployment
+- **Objective**: Deploy a static website on AWS using Amazon S3.
+- **Tools and Technologies**:
+  - **Amazon S3**: For hosting the static website.
+  - **Amazon CloudFront**: For HTTPS and content delivery.
+  - **Amazon Route 53**: For DNS management.
+  - **Amazon DynamoDB**: NoSQL database.
+  - **AWS API Gateway**: For building APIs.
+  - **AWS Lambda**: Serverless compute.
+  - **Python (boto3)**: For AWS SDK interactions.
+  - **AWS Certificate Manager**: For SSL certificates.
+  - **AWS Amplify**: For building and hosting websites.
+  - **IAM**: For security management.
+- **Strategy**: Use the lift and shift strategy.
+- **Example App**: Simple 2-tier or 3-tier calculator app.
 
-PROJECT #1
-Amazon S3 project: Deploy a static website on AWS using Amazon S3 
-•	Use HTTPs for security (Amazon CloudFront), use Amazon Route 53 for DNS, Amazon DynamoDB, AWS API Gate away, Lambda, python(boto3), Certificate manager
-•	Simple 2-tier, 3-tier calculator App or any other App. 
-•	Tools: AWS Amplify – used to build and host websites. Lambda- code that runs (serverless) upon trigger. API Gateway- used to build APIs. DynamoDB – NoSQL Database. IAM – creates security to the Lambda.
-•	Use lift and shift strategy
+### Project #2: Infrastructure as Code (IaC)
+- **Objective**: Deploy a static website using AWS Serverless Application Model (SAM) template and AWS SAM CLI.
+- **Tools and Technologies**:
+  - **Terraform or SAM**: For IaC.
+  - **Git**: For version control.
+  - **Linux**: For administration tasks (SSH, FTP).
+- **Security**: Implement firewall, reverse proxy, and forward proxy.
+- **Challenge**: Complete the [Cloud Resume Challenge](https://cloudresumechallenge.dev/docs/the-challenge/aws/).
 
-PROJECT #2
-Infrastructure as Code (Iac) project:  Deploy a static website on AWS using AWS Serverless Application Model (SAM) template and deploy them using AWS SAM CLI
-•	Use the previous projects examples.
-•	Tools: Terraform or SAM 
-•	Using past/new projects, finish this  https://cloudresumechallenge.dev/docs/the-challenge/aws/ challenge steps and you will be ready for the next phase 
-•	Security: Firewall, Reverse Proxy and Forward Proxy
-•	Version control: Git
-•	Master Linux: Linux admin, ssh, ftp
+### Project #3: Docker Deployment
+- **Objective**: Deploy a dynamic web application on AWS using Docker, ECR, and ECS Fargate.
+- **Tools and Technologies**:
+  - **Docker**: For containerization.
+  - **ECR**: For container registry.
+  - **ECS Fargate**: For serverless container orchestration.
+  - **Route 53**: For DNS management.
+  - **GitHub Repo**: [WillButton/trustified-api](https://github.com/rekibnikufesin).
+- **Networking**: Subnets, SSL, load balancers.
+- **Logging**: Implement logging facilities.
 
-PROJECT #3
-Docker Project: Deploy a Dynamic Web application on AWS using Docker, ECR, and ECS Fargate
-•	GitHub: [WillButton/trustified-api](https://github.com/rekibnikufesin)
-•	Containerization, Image, Ps, ECR Registry, ECS Fargate Service in ECS Cluster
-•	Networking: Subnets, ssl
-•	Load balancers
-•	Create DNS in Route53
-•	Logging Facility 
+### Project #4: Kubernetes Deployment
+- **Objective**: Deploy a dynamic web application on AWS using Docker, ECR, and Kubernetes.
+- **Tools and Technologies**:
+  - **Kubernetes**: For container orchestration.
+  - **EKS**: For managed Kubernetes service.
+  - **GitHub Repo**: [N4si/cloud-native-monitoring-app](https://github.com/N4si/cloud-native-monitoring-app).
+  - **Boto3, Docker, KubeCtl**: For deployment and management.
+- **Architecture**: Pods, manifests, deployments, replicas, microservices.
 
+### Project #5: Terraform Deployment
+- **Objective**: Use Terraform to deploy dynamic web applications from previous projects.
+- **Tools and Technologies**:
+  - **Terraform**: For infrastructure provisioning.
+  - **IaC**: Infrastructure as Code.
 
-PROJECT #4
-Kubernetes project:  Deploy a Dynamic Web application on AWS using Docker, ECR, and Kubernetes
-•	GitHub: [N4si/cloud-native-monitoring-app](https://github.com/N4si/cloud-native-monitoring-app). Tools: Boto3, Docker, KubeCtl, AWS account, Python3(Preferred language), ECR, EKS
-•	Container Orchestration
-•	Docker Swarm or Open Shift can be used instead
-•	Architecture, Pods, Manifest, Deployment, Replicas
-•	Microservices 
+### Project #6: Ansible Deployment
+- **Objective**: Deploy a web application on AWS using Ansible.
+- **Tools and Technologies**:
+  - **Ansible**: For configuration management.
+  - **Puppet or Chef**: Alternatives for configuration management.
+- **Tasks**: Service, shell, and debug management.
 
-PROJECT #5
-Terraform Project: use Terraform To deploy the Dynamic Web application from EC2, Docker and Kubernetes Projects above
-•	Infrastructure provision 
-•	IaC
+### Project #7: Python Automation
+- **Objective**: Use Python to automate AWS-related tasks and solutions.
+- **Tools and Technologies**:
+  - **Python**: As a scripting language.
 
-PROJECT #6
-Ansible Project: Deploy a web App on AWS using Ansible
-•	Configuration management
-•	Puppet or Chef can be used instead.
-•	Service, Shell and Debug 
+### Project #8: CI/CD Pipeline
+- **Objective**: Deploy a dynamic web application on AWS using a CI/CD pipeline.
+- **Tools and Technologies**:
+  - **Jenkins, GitLab CI, Docker, Kubernetes**: For CI/CD pipeline.
+  - **Cypress**: For testing.
+  - **AWS X-Ray, CloudWatch, Splunk**: For monitoring.
+  - **GitHub Repos**: [Jenkins-Zero-To-Hero](https://github.com/Gymnott1/Jenkins-Zero-To-Hero), [Azure-Samples/contoso-real-estate](https://github.com/Azure-Samples/contoso-real-estate).
+- **Tasks**: Launch EC2 instances, install Jenkins plugins, implement testing, monitoring, and logging.
 
-PROJECT #7
-Python Project: Use Python to Automate AWS-related Tasks and Solutions
-•	Python as scripting language 
+### Project #9: Refactoring Projects
+- **Objective**: Migrate existing applications to new architecture.
+- **Frontend Stack**: VM for Tomcat, Application Load Balancer, Autoscaling, S3 for storage.
+- **Backend Stack**: RDS instance, Active MQ, Elastic Cache, Route 53, CloudFront.
 
-PROJECT #8
-CI/CD Project:  Deploy a Dynamic Web application on AWS using a CI/CD Pipeline then implement Testing, Monitoring and Logging
-•	GitHub: Jenkins-Zero-To-Hero, Azure-Samples/contoso-real-estate
-•	Site: chtrmbl.github.io
-•	Tools: Cypress for testing, S3, AWS X-Ray, CloudWatch, Git, Jenkins, Splunk used for Monitoring, GitLab Ci, Docker.io, Minicube, AlgoCd, Kubernetes , GitHub
-•	Launch EC2 Instance
-•	Jenkins: install (Docker Plugin attached with Maven, SonerQube Scanner Plugin)
-•	Site: operatorhub.io
-•	EC2 lab offers an environment for K8 (Kubernetes)
+## Additional Concepts
 
-PROJECT #9
-Re-factoring projects: Migrate existing application to new architecture
-•	Stack (Frontend): VM for Tomcat (App Server), Application load balancer, Autoscaling for VM scaling, S3 for storage.
-•	Stack (Backend): RDS instance, Active MQ, Elastic Cache, Route53, CloudFront. 
+### Networking Concepts
+- **VPN, Public & Private DNS, NAT, Proxy, Firewall**: Understand and implement.
+- **Static/Dynamic IPs, CIDR Notations, Public/Private Network, Subnets**: Networking basics.
+- **Protocols**: HTTP, HTTPS, FTP, TCP, SSL/TLS, SSH, SMTP.
 
-ADDITIONAL CONCEPTS
-Networking Concept
-•	VPN, Public & Private DNS, NAT, Proxy, Firewall, Static/Dynamic Ips, CIDR Notations, Public/Private Network, Subnets
-•	Protocols: http, https, ftp, tcp, ssl/tls, ssh, smtp
+### Documentation and Resume Building
+- **Upload Work**: Regularly upload your work to LinkedIn, GitHub, and personal blogs.
+- **References**:
+  - **Sites**: [adityacprtm.dev](https://adityacprtm.dev), [marikabergman.com](https://marikabergman.com).
+  - **GitHub**: [Mo ROBLE](https://github.com/MoROBLE).
 
-RESUME:
-•	Often upload your work to LinkedIn, GitHub, personal blogs. Check out: 
-Site: adityacprtm.dev, GitHub: Mo ROBLE, Site: marikabergman.com
+## Documentation
+Each step of the projects will be documented in the repository for future reference and learning.
 
-
-
-
-I WILL BE DOCUMENTING EACH STEPS IN MY REPOSITORY
-
-
-
+Happy learning and coding! ☁️💻
 
 
+## Something To Think about
 
-
-
-
-
+![image](staticweb/cl3.png)

@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building a Brain - Neural Network Fundamentals</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .header-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: 1;
+            background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="10" fill="white"/><circle cx="20" cy="20" r="5" fill="white"/><circle cx="80" cy="80" r="7" fill="white"/><circle cx="80" cy="20" r="6" fill="white"/><circle cx="20" cy="80" r="8" fill="white"/></svg>');
+            background-size: 150px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+        
+        .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .mobile-nav-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+        
+        section {
+            margin-bottom: 4rem;
+        }
+        
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background-color: var(--secondary-color);
+            border-radius: 2px;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--primary-color);
+        }
+        
+        p {
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .card-text {
+            color: #555;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-container {
+            margin: 2rem 0;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        #neural-demo {
+            width: 100%;
+            height: 300px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .neuron {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+        
+        .connection {
+            position: absolute;
+            height: 2px;
+            background-color: #bdc3c7;
+            transform-origin: 0 0;
+            z-index: -1;
+        }
+        
+        .active-connection {
+            background-color: var(--accent-color);
+            box-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
+        }
+        
+        .active-neuron {
+            background-color: var(--accent-color);
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.7);
+            transform: scale(1.2);
+        }
+        
+        .demo-controls {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 3rem 0;
+            padding-left: 2rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--secondary-color);
+            border-radius: 2px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+        
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: -2.4rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: white;
+            border: 4px solid var(--secondary-color);
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .code-block {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+        
+        .code-header {
+            padding: 0.5rem 1rem;
+            background-color: #1e2b38;
+            margin: -1.5rem -1.5rem 1rem;
+            color: #bdc3c7;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .copy-btn {
+            background: transparent;
+            border: 1px solid #7f8c8d;
+            color: #7f8c8d;
+            border-radius: 3px;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: white;
+        }
+        
+        .process-steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 2rem 0;
+            counter-reset: step-counter;
+        }
+        
+        .process-step {
+            flex: 1;
+            min-width: 250px;
+            margin: 1rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            counter-increment: step-counter;
+        }
+        
+        .process-step::before {
+            content: counter(step-counter);
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        thead {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .quote-block {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-left: 5px solid var(--secondary-color);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        .quote-block::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            font-size: 5rem;
+            color: rgba(52, 152, 219, 0.2);
+            font-family: Georgia, serif;
+        }
+        
+        .quote-text {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+        
+        .quote-author {
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: right;
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 3rem 0;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        
+        .footer-links h3 {
+            color: white;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding: 1.5rem 0;
+            background-color: #1a2530;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        .progress-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .progress-bar {
+            height: 30px;
+            background-color: #ecf0f1;
+            border-radius: 15px;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            border-radius: 15px;
+            width: 0%;
+            transition: width 1.5s ease;
+            position: relative;
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            mix-blend-mode: difference;
+        }
+        .card {
+            position: relative;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 380px;
+            margin: 0 auto;
+            }
+
+            .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
+            }
+
+            .card-img {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            }
+
+            .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+            }
+
+            .card:hover .card-img img {
+            transform: scale(1.05);
+            }
+
+            .card-content {
+            padding: 1.5rem;
+            }
+
+            .card-title {
+            margin: 0 0 0.75rem 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            line-height: 1.3;
+            }
+
+            .card-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #4a4a68;
+            margin: 0;
+            }
+
+            /* Add a subtle accent line between image and content */
+            .card-content::before {
+            content: '';
+            position: absolute;
+            top: 220px;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #3498db, transparent);
+            }
+
+            /* Responsive adjustments */
+            @media (max-width: 768px) {
+            .card-img {
+                height: 180px;
+            }
+            
+            .card-content::before {
+                top: 180px;
+            }
+            }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: white;
+                flex-direction: column;
+                padding: 1rem;
+                gap: 1rem;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-nav-toggle {
+                display: block;
+            }
+            
+            .process-steps {
+                flex-direction: column;
+            }
+            
+            .process-step {
+                margin-bottom: 2.5rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .footer-links ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+            
+            .footer-links li {
+                margin-bottom: 0;
+            }
+        }
+        .fashion-mnist-img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-bg"></div>
+        <div class="header-content">
+            <h1>Building a Brain</h1>
+            <p class="subtitle">Exploring the Fascinating World of Neural Networks: From Biological Inspiration to Modern AI Implementations</p>
+            <a href="#get-started" class="btn">Get Started</a>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">B</div>
+                BrainBuild
+            </a>
+            <ul class="nav-links">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#history">History</a></li>
+                <li><a href="#neural-networks">Neural Networks</a></li>
+                <li><a href="#building-process">Building Process</a></li>
+                <li><a href="#applications">Applications</a></li>
+                <li><a href="#resources">Resources</a></li>
+            </ul>
+            <button class="mobile-nav-toggle">☰</button>
+        </div>
+    </nav>
+    
+    <main>
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>Building artificial neural networks is one of the most fascinating endeavors in modern computer science. Inspired by the biological processes of the human brain, neural networks have evolved from simple mathematical models to complex systems capable of image recognition, natural language processing, and more.</p>
+            
+            <div class="quote-block">
+                <p class="quote-text">Many decades ago, artificial neural networks were developed to mimic the learning capabilities of humans and animals. Since then, computers and machine learning libraries have evolved to where we can replicate many days of experimentation in just a few minutes.</p>
+                <p class="quote-author">— From "Building a Brain in 10 Minutes"</p>
+            </div>
+            
+            <p>Today's neural networks use advanced software libraries like TensorFlow, allowing researchers and developers to build increasingly sophisticated AI models. This revolution in AI has made what once seemed impossible — like accurate image classification — into everyday technology.</p>
+        </section>
+        
+        <section id="history" class="timeline-section">
+            <h2>The Evolution of Neural Networks</h2>
+            <p>The journey from theoretical biological inspiration to practical artificial intelligence has been marked by significant milestones:</p>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">1943</div>
+                    <h3>The First Neural Network Model</h3>
+                    <p>Warren McCulloch and Walter Pitts created the first computational model for neural networks based on mathematics and algorithms called threshold logic.</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">1950s-1960s</div>
+                    <h3>Perceptron and Early Research</h3>
+                    <p>Frank Rosenblatt created the perceptron, an early neural network algorithm for pattern recognition. This period saw significant theoretical development but limited practical applications due to computational constraints.</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">1980s</div>
+                    <h3>Backpropagation Revolution</h3>
+                    <p>The popularization of the backpropagation algorithm allowed for training multi-layer networks, overcoming previous limitations and revitalizing the field.</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2000s</div>
+                    <h3>Deep Learning Emergence</h3>
+                    <p>With increased computational power and large datasets, deep learning approaches began to achieve unprecedented performance in various tasks.</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2010s-Present</div>
+                    <h3>Democratization of AI</h3>
+                    <p>Libraries like TensorFlow and PyTorch have made neural network development accessible, allowing anyone with a computer to build sophisticated AI systems in minutes rather than months.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="neural-networks">
+            <h2>Understanding Neural Networks</h2>
+            <p>Neural networks draw inspiration from the human brain, where billions of interconnected neurons process and transmit information. In artificial neural networks, we mimic this structure with mathematical models:</p>
+            
+            <div class="grid">
+                <div class="card">
+                    <div class="card-img">Biological Neuron Structure</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Biological Inspiration</h3>
+                        <p class="card-text">Biological neurons transmit information with a mechanism similar to Morse Code. They receive electrical signals through dendrites and, under the right conditions, send an electrical impulse down the axon and out through terminals.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-img">Artificial Neuron Model</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Artificial Neurons</h3>
+                        <p class="card-text">Artificial neurons use mathematical formulas to emulate their biological counterparts. The basic formula is y = w₀x₀ + w₁x₁ + w₂x₂ + ... + b, where w represents weights, x represents inputs, and b is a bias term.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-img">Neural Network Architecture</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Network Architecture</h3>
+                        <p class="card-text">Modern neural networks consist of layers of neurons that process information. Most networks include input layers, hidden layers, and output layers, each performing specific transformations on the data.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Interactive Neural Network Demonstration</h3>
+            <div class="demo-container">
+                <div id="neural-demo"></div>
+                <div class="demo-controls">
+                    <button id="start-demo" class="btn">Start Simulation</button>
+                    <button id="reset-demo" class="btn" style="background-color: #7f8c8d;">Reset</button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="building-process">
+            <h2>Building a Neural Network in 3 Steps</h2>
+            <p>Creating a functional neural network can be broken down into three fundamental steps:</p>
+            
+            <div class="process-steps">
+                <div class="process-step">
+                    <h3>Defining the Architecture</h3>
+                    <p>This involves determining the structure of your network, including the number of layers, neurons per layer, and how they connect. The architecture should match the complexity of your problem.</p>
+                </div>
+                
+                <div class="process-step">
+                    <h3>Initiating Training</h3>
+                    <p>Training involves feeding data through the network, calculating error using a loss function, and adjusting the weights to improve performance. This is where the network "learns" from examples.</p>
+                </div>
+                
+                <div class="process-step">
+                    <h3>Evaluating the Model</h3>
+                    <p>After training, the model is evaluated against validation data it hasn't seen during training. This helps ensure the model can generalize rather than just memorize the training data.</p>
+                </div>
+            </div>
+            
+            <h3>Sample Code: Building a Simple Neural Network with TensorFlow</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>TensorFlow Code Example</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>import tensorflow as tf
+
+# Define the model architecture
+model = tf.keras.Sequential([
+    tf.keras.layers.Flatten(input_shape=(28, 28)),
+    tf.keras.layers.Dense(10)
+])
+
+# Compile the model with loss function and optimizer
+model.compile(
+    optimizer='adam',
+    loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+    metrics=['accuracy']
+)
+
+# Train the model
+history = model.fit(
+    train_images,
+    train_labels,
+    epochs=5,
+    validation_data=(valid_images, valid_labels)
+)
+
+# Evaluate the model's performance
+model.evaluate(test_images, test_labels)</code></pre>
+            </div>
+            
+            <h3>Training Progress Visualization</h3>
+            <div class="progress-container">
+                <h4>Model Training Progress</h4>
+                <p>Watch how a neural network improves with each epoch (training cycle):</p>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="accuracy-progress"></div>
+                    <div class="progress-text">Accuracy: <span id="accuracy-value">0%</span></div>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="loss-progress"></div>
+                    <div class="progress-text">Loss: <span id="loss-value">1.0</span></div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="applications">
+            <h2>Neural Network Applications</h2>
+             <div class="grid">
+                <div class="card">
+                    <div class="card-img">
+                        <img src="fashion_mnist_example.png" alt="Image Classification Example" ">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Computer Vision</h3>
+                        <p class="card-text">Neural networks can classify images, detect objects, and even generate new images. The example in our document uses Fashion MNIST to classify clothing articles with impressive accuracy.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-img">
+                        <img src="fashion_mnist_example.png" alt="Image Classification Example" ">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Language Processing</h3>
+                        <p class="card-text">From sentiment analysis to machine translation, neural networks have revolutionized how computers understand and generate human language.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-img">
+                        <img src="fashion_mnist_example.png" alt="Image Classification Example" ">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Healthcare</h3>
+                        <p class="card-text">Neural networks assist in diagnosing diseases from medical images, predicting patient outcomes, and discovering new medications.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-img">
+                        <img src="fashion_mnist_example.png" alt="Image Classification Example" ">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Self-Driving Vehicles</h3>
+                        <p class="card-text">Neural networks enable self-driving cars to recognize road signs, pedestrians, and other vehicles, making real-time driving decisions.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Fashion MNIST Classification Results</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Label</th>
+                        <th>Description</th>
+                        <th>Classification Accuracy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>T-shirt/top</td>
+                        <td>85%</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Trouser</td>
+                        <td>98%</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Pullover</td>
+                        <td>82%</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Dress</td>
+                        <td>89%</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Coat</td>
+                        <td>79%</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Sandal</td>
+                        <td>94%</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Shirt</td>
+                        <td>71%</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>Sneaker</td>
+                        <td>95%</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>Bag</td>
+                        <td>91%</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>Ankle boot</td>
+                        <td>96%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        
+        <section id="resources">
+            <h2>Resources for Building Your Own Neural Network</h2>
+            <p>Ready to build your own artificial brain? Here are some essential resources to get you started:</p>
+            
+            <div class="grid">
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">TensorFlow</h3>
+                        <p class="card-text">An open-source machine learning library that makes it easy to build and train neural networks. Perfect for beginners and experts alike.</p>
+                        <a href="#" class="btn" style="background-color: var(--success-color);">Learn More</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Deep Learning Courses</h3>
+                        <p class="card-text">Online courses that guide you through the theory and practice of neural networks, from basic concepts to cutting-edge techniques.</p>
+                        <a href="#" class="btn" style="background-color: var(--success-color);">Browse Courses</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Public Datasets</h3>
+                        <p class="card-text">Collections of labeled data like Fashion MNIST that you can use to train and test your neural network models.</p>
+                        <a href="#" class="btn" style="background-color: var(--success-color);">Explore Datasets</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">GPU Computing</h3>
+                        <p class="card-text">Resources to help you accelerate your neural network training with graphics processing units.</p>
+                        <a href="#" class="btn" style="background-color: var(--success-color);">GPU Guide</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quote-block">
+                <p class="quote-text">Computers are built with discrete 0s and 1s whereas humans and animals are built on more continuous building blocks. Because of this, some of the first neurons attempted to mimic biological neurons with a linear regression function.</p>
+                <p class="quote-author">— From "Building a Brain in 10 Minutes"</p>
+            </div>
+        </section>
+        
+        <section id="get-started">
+            <h2>Get Started Today</h2>
+            <p>Building a neural network might seem complex, but with modern tools and frameworks, you can create a simple model in minutes. Follow our step-by-step approach:</p>
+            
+            <div class="process-steps">
+                <div class="process-step">
+                    <h3>Install TensorFlow</h3>
+                    <p>Set up your development environment with TensorFlow and other necessary libraries.</p>
+                </div>
+                
+                <div class="process-step">
+                    <h3>Prepare Your Data</h3>
+                    <p>Find or create a dataset relevant to your problem, then preprocess and normalize it for optimal training.</p>
+                </div>
+                
+                <div class="process-step">
+                    <h3>Design Your Model</h3>
+                    <p>Choose an appropriate architecture for your neural network based on your specific task.</p>
+                </div>
+                
+                <div class="process-step">
+                    <h3>Train and Evaluate</h3>
+                    <p>Train your model on your dataset and evaluate its performance using metrics like accuracy.</p>
+                </div>
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Complete TensorFlow Model Example</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>import tensorflow as tf
+import matplotlib.pyplot as plt
+
+# Load the Fashion MNIST dataset
+fashion_mnist = tf.keras.datasets.fashion_mnist
+(train_images, train_labels), (valid_images, valid_labels) = fashion_mnist.load_data()
+
+# Normalize pixel values to be between 0 and 1
+train_images = train_images / 255.0
+valid_images = valid_images / 255.0
+
+# Define the model architecture
+model = tf.keras.Sequential([
+    tf.keras.layers.Flatten(input_shape=(28, 28)),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dense(10)
+])
+
+# Compile the model
+model.compile(
+    optimizer='adam',
+    loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+    metrics=['accuracy']
+)
+
+# Train the model
+history = model.fit(
+    train_images,
+    train_labels,
+    epochs=10,
+    validation_data=(valid_images, valid_labels)
+)
+
+# Evaluate the model
+test_loss, test_acc = model.evaluate(valid_images, valid_labels, verbose=2)
+print(f"Test accuracy: {test_acc:.2f}")
+
+# Make predictions
+probability_model = tf.keras.Sequential([model, tf.keras.layers.Softmax()])
+predictions = probability_model.predict(valid_images)
+
+# Plot the results
+plt.figure(figsize=(10, 10))
+for i in range(25):
+    plt.subplot(5, 5, i+1)
+    plt.imshow(valid_images[i], cmap='gray')
+    plt.title(f"Pred: {tf.argmax(predictions[i])}")
+    plt.axis('off')
+plt.tight_layout()
+plt.show()</code></pre>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about">
+                <div class="footer-logo">BrainBuild</div>
+                <p>Dedicated to making neural networks accessible to everyone through clear explanations and practical examples.</p>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#history">History</a></li>
+                    <li><a href="#neural-networks">Neural Networks</a></li>
+                    <li><a href="#building-process">Building Process</a></li>
+                    <li><a href="#applications">Applications</a></li>
+                    <li><a href="#resources">Resources</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Tutorials</a></li>
+                    <li><a href="#">API Reference</a></li>
+                    <li><a href="#">Examples</a></li>
+                    <li><a href="#">Community</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Connect</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">GitHub</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">YouTube</a></li>
+                    <li><a href="#">Newsletter</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2025 BrainBuild. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Mobile navigation toggle
+        document.querySelector('.mobile-nav-toggle').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+        
+        // Copy button functionality
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const codeText = this.parentElement.nextElementSibling.textContent;
+                navigator.clipboard.writeText(codeText);
+                
+                const originalText = this.textContent;
+                this.textContent = 'Copied!';
+                
+                setTimeout(() => {
+                    this.textContent = originalText;
+                }, 2000);
+            });
+        });
+        
+        // Neural network demo
+        const neuralDemo = document.getElementById('neural-demo');
+        const startBtn = document.getElementById('start-demo');
+        const resetBtn = document.getElementById('reset-demo');
+        
+        // Create neurons
+        const inputNeurons = 4;
+        const hiddenNeurons = 5;
+        const outputNeurons = 3;
+        
+        let neurons = [];
+        let connections = [];
+        
+        function createNeuralNetwork() {
+            neuralDemo.innerHTML = '';
+            neurons = [];
+            connections = [];
+            
+            // Input layer
+            for (let i = 0; i < inputNeurons; i++) {
+                const neuron = document.createElement('div');
+                neuron.className = 'neuron';
+                neuron.textContent = 'I' + i;
+                neuron.style.left = '10%';
+                neuron.style.top = `${20 + (i * 60 / inputNeurons)}%`;
+                neurons.push(neuron);
+                neuralDemo.appendChild(neuron);
+            }
+            
+            // Hidden layer
+            for (let i = 0; i < hiddenNeurons; i++) {
+                const neuron = document.createElement('div');
+                neuron.className = 'neuron';
+                neuron.textContent = 'H' + i;
+                neuron.style.left = '50%';
+                neuron.style.top = `${15 + (i * 70 / hiddenNeurons)}%`;
+                neurons.push(neuron);
+                neuralDemo.appendChild(neuron);
+            }
+            
+            // Output layer
+            for (let i = 0; i < outputNeurons; i++) {
+                const neuron = document.createElement('div');
+                neuron.className = 'neuron';
+                neuron.textContent = 'O' + i;
+                neuron.style.left = '90%';
+                neuron.style.top = `${25 + (i * 50 / outputNeurons)}%`;
+                neurons.push(neuron);
+                neuralDemo.appendChild(neuron);
+            }
+            
+            // Create connections
+            for (let i = 0; i < inputNeurons; i++) {
+                for (let j = 0; j < hiddenNeurons; j++) {
+                    createConnection(i, inputNeurons + j);
+                }
+            }
+            
+            for (let i = 0; i < hiddenNeurons; i++) {
+                for (let j = 0; j < outputNeurons; j++) {
+                    createConnection(inputNeurons + i, inputNeurons + hiddenNeurons + j);
+                }
+            }
+        }
+        
+        function createConnection(from, to) {
+            const connection = document.createElement('div');
+            connection.className = 'connection';
+            
+            const fromNeuron = neurons[from];
+            const toNeuron = neurons[to];
+            
+            const fromRect = fromNeuron.getBoundingClientRect();
+            const toRect = toNeuron.getBoundingClientRect();
+            const demoRect = neuralDemo.getBoundingClientRect();
+            
+            const fromX = fromRect.left + fromRect.width / 2 - demoRect.left;
+            const fromY = fromRect.top + fromRect.height / 2 - demoRect.top;
+            const toX = toRect.left + toRect.width / 2 - demoRect.left;
+            const toY = toRect.top + toRect.height / 2 - demoRect.top;
+            
+            const length = Math.sqrt(Math.pow(toX - fromX, 2) + Math.pow(toY - fromY, 2));
+            const angle = Math.atan2(toY - fromY, toX - fromX) * 180 / Math.PI;
+            
+            connection.style.width = `${length}px`;
+            connection.style.left = `${fromX}px`;
+            connection.style.top = `${fromY}px`;
+            connection.style.transform = `rotate(${angle}deg)`;
+            
+            connections.push({
+                element: connection,
+                from: from,
+                to: to
+            });
+            
+            neuralDemo.appendChild(connection);
+        }
+        
+        function runSimulation() {
+            // Activate input neurons
+            setTimeout(() => {
+                for (let i = 0; i < inputNeurons; i++) {
+                    if (Math.random() > 0.5) {
+                        neurons[i].classList.add('active-neuron');
+                    }
+                }
+            }, 500);
+            
+            // Activate connections from input to hidden
+            setTimeout(() => {
+                connections.forEach(conn => {
+                    if (conn.from < inputNeurons && neurons[conn.from].classList.contains('active-neuron')) {
+                        conn.element.classList.add('active-connection');
+                    }
+                });
+            }, 1000);
+            
+            // Activate hidden neurons
+            setTimeout(() => {
+                for (let i = 0; i < hiddenNeurons; i++) {
+                    let activeInputs = 0;
+                    connections.forEach(conn => {
+                        if (conn.to === (inputNeurons + i) && conn.element.classList.contains('active-connection')) {
+                            activeInputs++;
+                        }
+                    });
+                    
+                    if (activeInputs >= 2) {
+                        neurons[inputNeurons + i].classList.add('active-neuron');
+                    }
+                }
+            }, 1500);
+            
+            // Activate connections from hidden to output
+            setTimeout(() => {
+                connections.forEach(conn => {
+                    if (conn.from >= inputNeurons && conn.from < (inputNeurons + hiddenNeurons) && 
+                        neurons[conn.from].classList.contains('active-neuron')) {
+                        conn.element.classList.add('active-connection');
+                    }
+                });
+            }, 2000);
+            
+            // Activate output neurons
+            setTimeout(() => {
+                for (let i = 0; i < outputNeurons; i++) {
+                    let activeInputs = 0;
+                    connections.forEach(conn => {
+                        if (conn.to === (inputNeurons + hiddenNeurons + i) && 
+                            conn.element.classList.contains('active-connection')) {
+                            activeInputs++;
+                        }
+                    });
+                    
+                    if (activeInputs >= 2) {
+                        neurons[inputNeurons + hiddenNeurons + i].classList.add('active-neuron');
+                    }
+                }
+            }, 2500);
+        }
+        
+        function resetSimulation() {
+            neurons.forEach(neuron => {
+                neuron.classList.remove('active-neuron');
+            });
+            
+            connections.forEach(conn => {
+                conn.element.classList.remove('active-connection');
+            });
+        }
+        
+        startBtn.addEventListener('click', runSimulation);
+        resetBtn.addEventListener('click', resetSimulation);
+        
+        // Progress bars animation
+        function animateProgressBars() {
+            const accuracyProgress = document.getElementById('accuracy-progress');
+            const accuracyValue = document.getElementById('accuracy-value');
+            const lossProgress = document.getElementById('loss-progress');
+            const lossValue = document.getElementById('loss-value');
+            
+            const accuracyData = [0.52, 0.68, 0.75, 0.79, 0.82];
+            const lossData = [0.98, 0.72, 0.58, 0.49, 0.41];
+            
+            let epoch = 0;
+            
+            const interval = setInterval(() => {
+                if (epoch >= accuracyData.length) {
+                    clearInterval(interval);
+                    return;
+                }
+                
+                accuracyProgress.style.width = `${accuracyData[epoch] * 100}%`;
+                accuracyValue.textContent = `${Math.round(accuracyData[epoch] * 100)}%`;
+                
+                lossProgress.style.width = `${(1 - lossData[epoch]) * 100}%`;
+                lossValue.textContent = lossData[epoch].toFixed(2);
+                
+                epoch++;
+            }, 1500);
+        }
+        
+        // Initialize everything when the page loads
+        window.addEventListener('load', () => {
+            createNeuralNetwork();
+            
+            // Animate progress bars when they come into view
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateProgressBars();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+            
+            const progressContainer = document.querySelector('.progress-container');
+            if (progressContainer) {
+                observer.observe(progressContainer);
+            }
+        });
+        
+        // Adjust neural network connections on window resize
+        window.addEventListener('resize', () => {
+            createNeuralNetwork();
+        });
+    </script>
+</body>
+</html>
